@@ -3,12 +3,14 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var utf8 = require('utf8');
+const path = require('path');
+var mqtt = require('mqtt');
 const fs = require('fs');
 
-app.use(express.static('/home/pi/nodeapps/intercom/static'));
+app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/', function(req, res){
-  res.sendFile('index.html',  { root: __dirname });
+  res.sendFile(path.join(__dirname, '/index.html',))
 });
 app.get('/config', function(req, res){
   res.sendFile('config.html',  { root: __dirname });
@@ -29,27 +31,24 @@ var roles = {
   "[VIDEO]": {desc:"VIDEO CHANNEL + SUB CHANNELS",talksto:"NOT TALKING"}
 }
 // SETUP MQTT CONNECTION
-var mqtt = require('mqtt');
 var connectOptions = {
-    host: "192.168.10.125",
+    host: "127.0.0.1",
     port: 8883,
     protocol: "mqtts",
     keepalive: 10,
-    clientId: "nodeIntercom" + Math.random().toString(16).substr(2, 8),
-    protocolId: "MQTT",
-    protocolVersion: 4,
+    clientId: "nodeIntercom" + Math.random().toString(16),
     clean: true,
     username: "intercom",
-    password: "_Interc0M_",
+    password: "maluco",
     reconnectPeriod: 2000,
     connectTimeout: 2000,
     rejectUnauthorized: false
 };
 
 // DO NOT MAKE CHANGES BELOW UNLESS YOU KNOW WHAT YOU ARE DOING
-var client = mqtt.connect(connectOptions);
+var client = mqtt.connect("mqtts://127.0.0.1:8883",connectOptions);
 
-client.on('connect', function () {
+client.on("connect", function () {
   client.subscribe('media/intercom/#');
   console.log('Connected to MQTT server');
 });
