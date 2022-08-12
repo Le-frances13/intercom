@@ -1,3 +1,6 @@
+# CORRECT FILE PATHS
+# SEE IF "CAMS" THING IS INTERFERING SOMETHING
+
 import RPi.GPIO as GPIO
 from luma.core.interface.serial import i2c, spi
 from luma.core.render import canvas
@@ -12,7 +15,7 @@ import autopy3, os, socket, subprocess, sys, time, datetime, smbus2
 ################# BASESTATION USER CONFIGURATION ################
 ### INTERCOM CONFIGURATION
 ### WHO USES THIS BASESTATION ###
-icUser = ""
+icUser = "FOH"
 ### THIS DEVICE HAS 8 CHANNELS ["","","","","","","",""] (3 CHANNELS -> ["","",""])
 icTalkTo = [" "," "," "," "," "," "," "," "]
 oledIcTalkTo = ["","","","","","","",""]
@@ -21,12 +24,12 @@ mqttServer = "192.168.10.125"
 mqttPort = 8883
 mqttTimeOut = 10
 mqttUser = "intercom"
-mqttPass = "_Interc0M_"
+mqttPass = "maluco"
 ########## PLEASE DO NOT MAKE CHANGES BELOW THIS LINE! ##########
 #################################################################
 
 ### NETWORK INTERFACE USED
-interface = "eth0"
+interface = "wlan0"
 ### URL CONFIGURATION
 statusInterval = 5000 ### UPDATE INTERVAL FOR MQTT (IN MILLISECONDS)
 ### Software version
