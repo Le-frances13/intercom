@@ -15,12 +15,12 @@ import autopy3, os, socket, subprocess, sys, time, datetime, smbus2
 ################# BASESTATION USER CONFIGURATION ################
 ### INTERCOM CONFIGURATION
 ### WHO USES THIS BASESTATION ###
-icUser = "FOH"
+icUser = "icbs1"
 ### THIS DEVICE HAS 8 CHANNELS ["","","","","","","",""] (3 CHANNELS -> ["","",""])
 icTalkTo = [" "," "," "," "," "," "," "," "]
 oledIcTalkTo = ["","","","","","","",""]
 ### MQTT SETTINGS
-mqttServer = "192.168.10.125"
+mqttServer = "192.168.1.111"
 mqttPort = 8883
 mqttTimeOut = 10
 mqttUser = "intercom"
@@ -37,9 +37,9 @@ icSoftVerText = "SW v1.1"
 
 os.environ['DISPLAY'] = ':0.0'
 
-font1 = ImageFont.truetype('/home/pi/intercom/fonts/VeraMoBd.ttf',27)
-font2 = ImageFont.truetype('/home/pi/intercom/fonts/VeraMoBd.ttf',16)
-font3 = ImageFont.truetype('/home/pi/intercom/fonts/VeraMoBd.ttf',12)
+font1 = ImageFont.truetype('/home/admin/intercom/fonts/VeraMoBd.ttf',27)
+font2 = ImageFont.truetype('/home/admin/intercom/fonts/VeraMoBd.ttf',16)
+font3 = ImageFont.truetype('/home/admin/intercom/fonts/VeraMoBd.ttf',12)
 
 ### GET DEVICE HOSTNAME
 deviceHostName = socket.gethostname()
@@ -153,19 +153,19 @@ def oledUpdate():
                 isTalking = True
           if isTalking == True and talksToMeState[channelOrder[channelPointer]] == 0:
             draw.rectangle((0,0,127,32), outline=0, fill=255)
-            logo = Image.open('/home/pi/intercom/images/send_left.png')
+            logo = Image.open('/home/admin/intercom/images/send_left.png')
             draw.bitmap((2, 8), logo, fill=0)
             textSize=draw.textsize(talkTo, font=font2)
             draw.text(((128-textSize[0])/2, 8), talkTo, font=font2, fill=0)
-            logo = Image.open('/home/pi/intercom/images/send_right.png')
+            logo = Image.open('/home/admin/intercom/images/send_right.png')
             draw.bitmap((106, 8), logo, fill=0)
             talksToMeState[channelOrder[channelPointer]] = 1
           else:
-            logo = Image.open('/home/pi/intercom/images/send_left.png')
+            logo = Image.open('/home/admin/intercom/images/send_left.png')
             draw.bitmap((2, 8), logo, fill=255)
             textSize=draw.textsize(talkTo, font=font2)
             draw.text(((128-textSize[0])/2, 8), talkTo, font=font2, fill=1)
-            logo = Image.open('/home/pi/intercom/images/send_right.png')
+            logo = Image.open('/home/admin/intercom/images/send_right.png')
             draw.bitmap((106, 8), logo, fill=255)
             talksToMeState[channelOrder[channelPointer]] = 0
         channelPointer+=1
@@ -216,19 +216,19 @@ def oledUpdate():
                 isTalking = True
           if isTalking == True and talksToMeState[channelOrder[channelPointer]] == 0:
             draw.rectangle((0,33,127,64), outline=0, fill=255)
-            logo = Image.open('/home/pi/intercom/images/send_left.png')
+            logo = Image.open('/home/admin/intercom/images/send_left.png')
             draw.bitmap((2, 40), logo, fill=0)
             textSize=draw.textsize(talkTo, font=font2)
             draw.text(((128-textSize[0])/2, 40), talkTo, font=font2, fill=0)
-            logo = Image.open('/home/pi/intercom/images/send_right.png')
+            logo = Image.open('/home/admin/intercom/images/send_right.png')
             draw.bitmap((106, 50), logo, fill=0)
             talksToMeState[channelOrder[channelPointer]] = 1
           else:
-            logo = Image.open('/home/pi/intercom/images/send_left.png')
+            logo = Image.open('/home/admin/intercom/images/send_left.png')
             draw.bitmap((2, 40), logo, fill=255)
             textSize=draw.textsize(talkTo, font=font2)
             draw.text(((128-textSize[0])/2, 40), talkTo, font=font2, fill=1)
-            logo = Image.open('/home/pi/intercom/images/send_right.png')
+            logo = Image.open('/home/admin/intercom/images/send_right.png')
             draw.bitmap((106, 40), logo, fill=255)
             talksToMeState[channelOrder[channelPointer]] = 0
         channelPointer+=1
@@ -256,7 +256,7 @@ def clearBG(type):
     bus.write_byte(0x70, 0xFF)
     with canvas(device) as draw:
       draw.rectangle((0, 0, device.width, device.height), outline=0, fill=0)
-      logo = Image.open('/home/pi/intercom/images/made_in_arcada_1bit_shutdown.png')
+      logo = Image.open('/home/admin/intercom/images/made_in_arcada_1bit_shutdown.png')
       draw.bitmap((0, 0), logo, fill=1)
     time.sleep(2)
     with canvas(device) as draw:
@@ -373,7 +373,7 @@ def connectMQTT():
     pass
 
 client = mqtt.Client(client_id=deviceHostName, clean_session=False, userdata=None)
-client.tls_set("/home/pi/intercom/ca.crt")
+client.tls_set("/home/admin/intercom/ca.crt")
 ### USE INSECURE IF YOUR CERTIFICATE IS SELF SIGNED
 client.tls_insecure_set(True)
 client.username_pw_set(mqttUser, password=mqttPass)

@@ -21,10 +21,10 @@ while True:
   # UNCOMMENT NEXT LINE FOR FINE-TUNING OF POTENTIOMETER
   #print(raw_adc)
   # Translate analog input from 0 to 100
-  volume = int(translate(raw_adc,20680,-4600,0,100))
+  volume = int(translate(raw_adc,20680,-11859,0,100))
   if lastVolume <= volume -2 or lastVolume >= volume + 2:
     # UNCOMMENT NEXT LINE TO CHECK DATA FED INTO SOUNDCARD
-    #print("Digital Value of Analog Input : %d" %volume)
+    print("Digital Value of Analog Input : %d" %volume)
     subprocess.Popen('amixer -q -c1 set Speaker ' + str(volume) + '%', shell=True)
     lastVolume = volume
   time.sleep(0.25)

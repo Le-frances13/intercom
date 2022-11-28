@@ -8,7 +8,6 @@ import paho.mqtt.client as mqtt
 from signal import *
 import autopy3, os, socket, subprocess, sys, time
 from pyKey import pressKey, releaseKey, press, sendSequence, showKeys
-import re
 
 
 
@@ -85,13 +84,22 @@ lastTalkNow = False
 
 def wifiStatus():
   ### COLLECT DATA ABOUT THE WIFI
-  cmd = subprocess.Popen('iwconfig ' 'wlan0', shell=True, stdout=subprocess.PIPE)
-  linkQuality ="100"
-  signalLevel = "100"
-  activeAP = "100"
-
-  ### TODO: MAYBE ACTUALLY CALCULATE WIFI STRENGH
-
+  proc = subprocess.Popen(["iwconfig", interface], stdout=subprocess.PIPE, universal_newlines=True)
+  output, err = proc.communicate()
+  linkQuality ="N/A"
+  signalLevel = "N/A"
+  activeAP = "N/A"
+  if output != None:
+    for line in output.split("\n"):
+      cell_line = line.strip()
+      if cell_line.find("Link Quality") != -1:
+        output = cell_line.split('  ')
+        if len(output) == 2:
+          linkQuality = output[0].replace("Link Quality=","").rstrip()
+          signalLevel = output[1].replace("Signal level=","").rstrip()
+      if cell_line.find("Access Point:") != -1:
+        output = cell_line.split('  ')
+        activeAP = output[2].replace("Access Point: ","").rstrip()
   return(linkQuality, signalLevel, activeAP)
 
 def calculateWiFiQuality():
@@ -174,19 +182,19 @@ def showWiFiQuality(draw,type):
 
 def startBroadcasting(btn):
   if btn == 0:
-    pressKey('LALT'); pressKey('1')
+    pressKey('P')
     client.publish("media/intercom/broadcast/" + icUser + "/talk", ','.join(icTalkTo[btn]), qos=1, retain=True)
   elif btn == 1:
-    pressKey('LALT'); pressKey('2')
+    pressKey('O')
     client.publish("media/intercom/broadcast/" + icUser + "/talk", ','.join(icTalkTo[btn]), qos=1, retain=True)
   return(True)
 
 def stopBroadcasting(btn):
   if btn == 0:
-    releaseKey('LALT'); releaseKey('1')
+    releaseKey('P')
     client.publish("media/intercom/broadcast/" + icUser + "/talk", "NOT TALKING", qos=1, retain=True)
   elif btn == 1:
-    releaseKey('LALT'); releaseKey('2')
+    releaseKey('O')
     client.publish("media/intercom/broadcast/" + icUser + "/talk", "NOT TALKING", qos=1, retain=True)
   return(False)
 
