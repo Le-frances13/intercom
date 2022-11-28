@@ -10,6 +10,7 @@ from signal import *
 from threading import Thread
 import paho.mqtt.client as mqtt
 import autopy3, os, socket, subprocess, sys, time, datetime, smbus2
+from pyKey import pressKey, releaseKey, press, sendSequence, showKeys
 
 #################################################################
 ################# BASESTATION USER CONFIGURATION ################
